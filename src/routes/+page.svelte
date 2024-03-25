@@ -1,10 +1,10 @@
-<h1 class="text-3xl font-bold underline red">Welcome to SvelteKit</h1>
-<p>
-	Visit <a class="text-col" href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation
-</p>
-
-<style lang="postcss">
-	:global(html) {
-		background-color: theme(colors.gray.100);
-	}
-</style>
+<div class="flex items-center flex-col justify-center h-screen">
+	<div class="mt-8">
+		<h1 class="text-8xl font-semibold">Scraper</h1>
+	</div>
+	<p class="text-2xl">Simple google search result scrapper web application</p>
+	<button
+		class="text-2xl ml-2 px-4 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
+		><a href="http://localhost:3000/">Sign In</a></button
+	>
+</div>
