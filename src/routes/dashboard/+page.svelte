@@ -128,7 +128,7 @@
 				on:click={batchScrape}
 				type="button"
 				class="px-4 py-1 bg-blue-500 text-white rounded-full hover:bg-blue-600 focus:outline-none"
-				>Upload csv</button
+				>Batch scrape</button
 			>
 		</div>
 	</div>
