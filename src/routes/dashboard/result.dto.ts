@@ -1,9 +1,7 @@
 export interface Result {
 	id?: string;
 	keyword?: string;
-	links?: string;
+	linkAmount?: string;
 	totalSearchResult?: string;
-	htmlContent?: string;
 	adwordAmount?: number;
-	userID?: string;
 }
