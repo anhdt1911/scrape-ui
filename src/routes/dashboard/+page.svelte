@@ -23,6 +23,24 @@
 		Cookies.remove('auth-session');
 	}
 
+	async function fetchResult() {
+		const resultsResponse = await fetch(`${base}/results/${username}`, {
+			method: 'GET',
+			credentials: 'include',
+			redirect: 'follow'
+		});
+
+		const resultData = await resultsResponse.json();
+		const newResults: Result[] = resultData.data.map((ele: any) => ({
+			id: ele.id,
+			keyword: ele.keyword,
+			linkAmount: ele.linkAmount,
+			adwordAmount: ele.adwordAmount,
+			totalSearchResult: ele.totalSearchResult
+		}));
+		results.set(newResults);
+	}
+
 	onMount(async () => {
 		try {
 			const response = await fetch(`${base}/user`, {
@@ -33,22 +51,7 @@
 			if (response.ok) {
 				const data = await response.json();
 				user.set(data.data.sub);
-
-				const resultsResponse = await fetch(`${base}/results/${data.data.sub}`, {
-					method: 'GET',
-					credentials: 'include',
-					redirect: 'follow'
-				});
-
-				const resultData = await resultsResponse.json();
-				const newResults: Result[] = resultData.data.map((ele: any) => ({
-					id: ele.id,
-					keyword: ele.keyword,
-					linkAmount: ele.linkAmount,
-					adwordAmount: ele.adwordAmount,
-					totalSearchResult: ele.totalSearchResult
-				}));
-				results.set(newResults);
+				await fetchResult();
 			}
 		} catch (err) {
 			console.log(err);
@@ -65,23 +68,7 @@
 			body: formData
 		});
 		if (response.ok) {
-			const data = await response.json();
-
-			const resultsResponse = await fetch(`${base}/results/${username}`, {
-				method: 'GET',
-				credentials: 'include',
-				redirect: 'follow'
-			});
-
-			const resultData = await resultsResponse.json();
-			const newResults: Result[] = resultData.data.map((ele: any) => ({
-				id: ele.id,
-				keyword: ele.keyword,
-				linkAmount: ele.linkAmount,
-				adwordAmount: ele.adwordAmount,
-				totalSearchResult: ele.totalSearchResult
-			}));
-			results.set(newResults);
+			await fetchResult();
 		}
 		keyword = '';
 	}
@@ -96,7 +83,8 @@
 				body: formData
 			});
 			if (response.ok) {
-				alert('Data being scrape in the background. Sit tight!');
+				alert('Data being scrape in the background. Sit tight and refresh after a few secs!');
+				await fetchResult();
 			}
 		}
 	}
