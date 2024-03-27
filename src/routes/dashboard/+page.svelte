@@ -4,6 +4,7 @@
 	import { results, user } from '../../stores';
 	import type { Result } from './result.dto';
 
+	const backendURL = 'http://localhost:3000';
 	let keyword = '';
 	let username: string;
 	let files: any;
@@ -21,7 +22,7 @@
 
 	onMount(async () => {
 		try {
-			const response = await fetch('http://localhost:3000/user', {
+			const response = await fetch(`${backendURL}/user`, {
 				method: 'GET',
 				credentials: 'include'
 			});
@@ -30,7 +31,7 @@
 				const data = await response.json();
 				user.set(data.data.sub);
 
-				const resultsResponse = await fetch(`http://localhost:3000/results/${data.data.sub}`, {
+				const resultsResponse = await fetch(`${backendURL}/${data.data.sub}`, {
 					method: 'GET',
 					credentials: 'include',
 					redirect: 'follow'
@@ -56,14 +57,14 @@
 		formData.append('keyword', keyword);
 		formData.append('userID', username);
 
-		const response = await fetch('http://localhost:3000/scrape', {
+		const response = await fetch(`${backendURL}/scrape`, {
 			method: 'POST',
 			body: formData
 		});
 		if (response.ok) {
 			const data = await response.json();
 
-			const resultsResponse = await fetch(`http://localhost:3000/results/${username}`, {
+			const resultsResponse = await fetch(`${backendURL}/results/${username}`, {
 				method: 'GET',
 				credentials: 'include',
 				redirect: 'follow'
@@ -87,7 +88,7 @@
 			const formData = new FormData();
 			formData.append('file', files[0]);
 			formData.append('userID', username);
-			const response = await fetch('http://localhost:3000/batch-scrape', {
+			const response = await fetch(`${backendURL}/batch-scrape`, {
 				method: 'POST',
 				body: formData
 			});
