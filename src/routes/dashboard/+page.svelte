@@ -6,6 +6,7 @@
 	import Table from './Table.svelte';
 
 	let keyword = '';
+	let search = '';
 	let username: string;
 	let files: any;
 	let res: Result[];
@@ -24,14 +25,18 @@
 		Cookies.remove('auth-session');
 	}
 
-	async function fetchResult() {
-		const resultsResponse = await fetch(`${base}/results/${username}`, {
+	async function fetchResult(search: string) {
+		const resultsResponse = await fetch(`${base}/results/${username}?search=${search}`, {
 			method: 'GET',
 			credentials: 'include',
 			redirect: 'follow'
 		});
 
 		const resultData = await resultsResponse.json();
+		if (!resultData.data) {
+			results.set([]);
+			return;
+		}
 		const newResults: Result[] = resultData.data.map((ele: any) => ({
 			id: ele.id,
 			keyword: ele.keyword,
@@ -52,7 +57,7 @@
 			if (response.ok) {
 				const data = await response.json();
 				user.set(data.data.sub);
-				await fetchResult();
+				await fetchResult('');
 			}
 		} catch (err) {
 			console.log(err);
@@ -69,7 +74,7 @@
 			body: formData
 		});
 		if (response.ok) {
-			await fetchResult();
+			await fetchResult('');
 		}
 		keyword = '';
 	}
@@ -85,9 +90,13 @@
 			});
 			if (response.ok) {
 				alert('Data being scrape in the background. Sit tight and refresh after a few secs!');
-				await fetchResult();
+				await fetchResult('');
 			}
 		}
+	}
+
+	async function handleSearch() {
+		await fetchResult(search);
 	}
 </script>
 
@@ -133,6 +142,17 @@
 	<div>
 		<p class=" text-4xl font-bold">History</p>
 	</div>
+</div>
+<div>
+	<form class="flex items-center border rounded-full px-4 py-2 mb-5">
+		<input
+			type="text"
+			class="w-full px-2 py-1 focus:outline-none"
+			placeholder="Search keyword"
+			bind:value={search}
+			on:input={handleSearch}
+		/>
+	</form>
 </div>
 
 <Table />
