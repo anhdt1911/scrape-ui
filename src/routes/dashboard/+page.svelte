@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { baseUrl, results, user } from '../../stores';
 	import type { Result } from './result.dto';
+	import Table from './Table.svelte';
 
 	let keyword = '';
 	let username: string;
@@ -100,7 +101,7 @@
 </div>
 <div class="flex items-center justify-center mt-4">
 	<div class="w-96">
-		<form class="flex items-center border rounded-full px-4 py-2">
+		<form class="flex items-center border rounded-full px-4 py-2 mb-5">
 			<input
 				type="text"
 				class="w-full px-2 py-1 focus:outline-none"
@@ -113,7 +114,9 @@
 				>Scrape</button
 			>
 		</form>
-		or
+		<div class="py-2">
+			<p>or upload csv to batch upload in the background</p>
+		</div>
 		<div class="flex items-center mt-4">
 			<input type="file" accept=".csv" bind:files multiple={false} class="mr-2" />
 			<button
@@ -131,30 +134,8 @@
 		<p class=" text-4xl font-bold">History</p>
 	</div>
 </div>
-<table class="min-w-full divide-y divide-gray-200">
-	<thead class="bg-gray-100">
-		<tr>
-			<th class="py-2 px-4">Keyword</th>
-			<th class="py-2 px-4">Link amount</th>
-			<th class="py-2 px-4">Adword amount</th>
-			<th class="py-2 px-4">Total search result</th>
-		</tr>
-	</thead>
-	<tbody class="bg-white divide-y divide-gray-200">
-		{#each $results as res}
-			<tr>
-				<td class="py-2 px-4 text-center"
-					><a class="underline text-blue-600" href="{base}/result/{res.id}" target="_blank"
-						>{res.keyword}</a
-					></td
-				>
-				<td class="py-2 px-4 text-center"><p>{res.linkAmount}</p></td>
-				<td class="py-2 px-4 text-center"><p>{res.adwordAmount}</p></td>
-				<td class="py-2 px-4 text-center"><p>{res.totalSearchResult}</p></td>
-			</tr>
-		{/each}
-	</tbody>
-</table>
+
+<Table />
 
 <style>
 	.logout-button {
